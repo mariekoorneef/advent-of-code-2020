@@ -3,27 +3,31 @@
 from dotenv import load_dotenv
 from aocd.models import Puzzle
 import itertools
+import re
+
+
+def bit36(i: int) -> str:
+    return f'{i:036b}'
+
+
+def parse_docking(line: str) -> tuple:
+    """Parse 'mask = XX10' to ('mask', 'XX10') and 'mem[8] = 11' to (8, 11)"""
+    if line.startswith('mask'):
+        return 'mask', line.split()[-1]
+    else:
+        return tuple(map(int, re.findall(r'\d+', line)))
 
 
 def day14_1(data):
-    programs = [i.split(" = ") for i in data]
-    print(programs)
+    programs = [parse_docking(i) for i in data]
     results = {}
     for program in programs:
-        if program[0] == "mask":
-            mask = program[1]
+        addr, val = program
+        if addr == "mask":
+            mask = val
         else:
-            value = int(program[1])
-            value_bit = f"{value:036b}"
-            result = []
-            for i, j in zip(mask, value_bit):
-                if i == "X":
-                    result.append(j)
-                else:
-                    result.append(i)
-
-            result_string = "".join(result)
-            results[program[0]] = int(result_string, 2)
+            result = [j if i == "X" else i for i, j in zip(mask, bit36(val))]
+            results[f"mem[{addr}]"] = int("".join(result), 2)
 
     print(f"Part 1: Sum of all values left in memory after completion: {sum(results.values())}")
 
@@ -31,33 +35,26 @@ def day14_1(data):
 
 
 def day14_2(data):
-    programs = [i.split(" = ") for i in data]
+    programs = [parse_docking(i) for i in data]
     print(programs)
     results = {}
     for program in programs:
+        addr, val = program
         memory_addresses = []
 
-        if program[0] == "mask":
-            mask = program[1]
+        if addr == "mask":
+            mask = val
             nr_bitmask_bit_x = list(mask).count('X')
-            nr_memory_addresses = 2 ** nr_bitmask_bit_x
-            print(f"Mask contains {nr_bitmask_bit_x} floating points, causing writes to {nr_memory_addresses} addresses")
+            print(f"Mask contains {nr_bitmask_bit_x} floating points, causing writes to {2 ** nr_bitmask_bit_x} addresses")
 
             # the floating bits will take on all possible values
             a = [["0", "1"]] * nr_bitmask_bit_x
             floating_bits = list(itertools.product(*a))
 
             indices_bitmask_bit_x = [ind for ind, i in enumerate(mask) if i == "X"]
-            indices_bitmask_bit_1 = [ind for ind, i in enumerate(mask) if i == "1"]
         else:
-            memory_address = int(program[0].replace("mem[", "").replace("]", ""))
-            value_bit = f"{memory_address:036b}"
-            value_bit_list = list(value_bit)
-
             # If the bitmask bit is 1, the corresponding memory address bit is overwritten with 1.
-            for ind in indices_bitmask_bit_1:
-                value_bit_list[ind] = "1"
-
+            value_bit_list = [i if i == "1" else j for i, j in zip(mask, bit36(addr))]
             value_bit = "".join(value_bit_list)
 
             # If the bitmask bit is X, the corresponding memory address bit is floating.
@@ -70,8 +67,8 @@ def day14_2(data):
         memory_addresses = [int(s, 2) for s in memory_addresses]
 
         for i in memory_addresses:
-            print(f"mem[{i}]: {program[1]}")
-            results[f"mem[{i}]"] = int(program[1])
+            print(f"mem[{i}]: {val}")
+            results[f"mem[{i}]"] = val
 
     print(f"Part 2: Sum of all values left in memory after completion: {sum(results.values())}")
 

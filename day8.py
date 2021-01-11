@@ -52,11 +52,11 @@ def part_2(l: list, v: list, i: int = 0, acc: int = 0) -> tuple:
 
 
 def day8_1(data):
+    """Execute the program until it loops; then return accum. """
     instructions = [parse_instruction(i) for i in data]
 
     visit = [0]*len(data)
-    i = 0
-    accumulator = 0
+    i = accumulator = 0
 
     while visit[i] == 0:
         visit[i] = 1
@@ -66,11 +66,12 @@ def day8_1(data):
 
 
 def day8_2(data):
+    """By changing exactly one jmp or nop, the code terminates correctly."""
     visit = [0] * len(data)
     instructions = [parse_instruction(i) for i in data]
-    i = 0
-    accumulator = 0
+    i = accumulator = 0
 
+    # Run the program until it loops or terminates; return (terminates, accum)
     while visit[i] == 0:
         if instructions[i][0] in ("jmp", "nop"):
             # By changing exactly one jmp or nop, check if the code terminates correctly (boolean)

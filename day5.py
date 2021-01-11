@@ -42,11 +42,13 @@ def decode_seat(seat: str) -> int:
 
 
 def day5_1(seats):
+    """Find the maximum seat id. """
     seat_ids = [decode_seat(seat=s) for s in seats]
     return max(seat_ids)
 
 
 def day5_2(seats):
+    """Find the missing seat id"""
     seat_ids = [decode_seat(seat=s) for s in seats]
     return missing_elements(l=sorted(seat_ids))[0]
 

@@ -6,12 +6,13 @@ from math import sqrt
 from itertools import count, islice
 
 
-def is_prime(n:int) -> bool:
+def is_prime(n: int) -> bool:
     """Check if number n is a prime number"""
     return n > 1 and all(n % i for i in islice(count(2), int(sqrt(n)-1)))
 
 
 def day13_1(data):
+    """Find the earliest bus multiplied by the waiting time"""
     earliest_timestamp = int(data[0])
 
     bus_ids = [int(i) for i in data[1].split(",") if i != "x"]
@@ -33,6 +34,7 @@ def day13_1(data):
 
 
 def day13_2(data):
+    """Find the time where all the buses arrive at the right offsets. """
     buses = [(int(i), ind) for ind, i in enumerate(data.split(",")) if i != "x"]
 
     buses.sort(key=lambda tup: tup[0], reverse=True)
@@ -67,7 +69,7 @@ if __name__ == "__main__":
     day13_1(data=input_data)
 
     # note bus_ids are prime
-    for i in [int(i) for i in input_data[1].split(",") if i != "x"]:
-        print(f"Bus ID {i} is prime: {is_prime(n=i)}")
+    for nr in [int(i) for i in input_data[1].split(",") if i != "x"]:
+        print(f"Bus ID {nr} is prime: {is_prime(n=nr)}")
 
     day13_2(data=input_data[1])

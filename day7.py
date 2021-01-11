@@ -34,8 +34,10 @@ def parse_rule(rule: str) -> tuple:
     return key, value
 
 
-def day7_1(rules, x):
+def day7_1(rules, target='shiny gold'):
+    """How many colors of bags can contain the target color bag? """
     colors = []
+    x = [target]
     while x:
         s = x
         x = []
@@ -47,7 +49,8 @@ def day7_1(rules, x):
     return len(set(colors))
 
 
-def day7_2(rules):
+def day7_2(rules, target='shiny gold'):
+    """How many individual bags are inside the target bag?"""
     # Create a dictionary with parent child relationships
     nodes = {}
     for r in rules:
@@ -59,9 +62,9 @@ def day7_2(rules):
     # print(nodes)
 
     # Create a tree structure from a set of parent-child relationships starting at 'shiny gold'
-    tree = {"id": "shiny gold",
+    tree = {"id": target,
             "count": 1,
-            "children": create_children(nodes=nodes, l=nodes["shiny gold"])
+            "children": create_children(nodes=nodes, l=nodes[target])
             }
 
     # print(tree)
@@ -75,7 +78,7 @@ if __name__ == "__main__":
     lines = get_data(day=7, year=2020).splitlines()
 
     # --- Part One ---
-    print(f"Part One: {day7_1(rules=lines, x=['shiny gold'])} bag colors can eventually contain "
+    print(f"Part One: {day7_1(rules=lines, target='shiny gold')} bag colors can eventually contain "
           f"at least one shiny gold bag")
 
     # --- Part Two ---

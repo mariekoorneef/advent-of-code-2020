@@ -49,10 +49,11 @@ def check_passport_field_values(passport: dict) -> bool:
 
 
 def check_passport_contains_fields(passport: dict, required_fields: set) -> bool:
-    return required_fields.issubset(set(passport.keys()))
+    return required_fields.issubset(passport)
 
 
 def day4_1(passports, required_fields=None):
+    """Count the number of passports that have all required_fields. """
     if required_fields is None:
         required_fields = {"byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"}
     valid = [check_passport_contains_fields(passport, required_fields) for passport in passports]
@@ -60,6 +61,7 @@ def day4_1(passports, required_fields=None):
 
 
 def day4_2(passports, required_fields=None):
+    """Count the number of passports that have all required fields and valid values. """
     if required_fields is None:
         required_fields = {"byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"}
     valid = []

@@ -126,8 +126,8 @@ if __name__ == "__main__":
 
     # --- Part One ---
     manhattan_distance = day12_1(data=input_data)
-    print(f"Part One: Manhatten distance: {manhattan_distance}")
+    print(f"Part One: Manhattan distance: {manhattan_distance}")
 
     # --- Part Two ---
     manhattan_distance = day12_2(data=input_data)
-    print(f"Part Two: Manhatten distance: {manhattan_distance}")
+    print(f"Part Two: Manhattan distance: {manhattan_distance}")

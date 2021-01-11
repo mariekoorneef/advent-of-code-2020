@@ -5,18 +5,16 @@ from dotenv import load_dotenv
 
 
 def day6_1(answers):
-    counts = []
-    for answer in answers:
-        yes = set(answer.replace('\n', ' ').replace('', ' ').split())
-        counts.append(len(yes))
-    return sum(counts)
+    """What is the sum of counts for each group to which anyone answered 'yes'? """
+    return sum([len(set(answer.replace('\n', '')))
+                for answer in answers])
 
 
 def day6_2(answers):
+    """What is the sum of counts for each group to which everyone answered 'yes'? """
     counts = []
     for answer in answers:
-        answer1 = answer.replace('\n', ' ').split()
-        setlist = [set(a) for a in answer1]
+        setlist = [set(a) for a in answer.splitlines()]
         u = set.intersection(*setlist)
         counts.append(len(u))
     return sum(counts)

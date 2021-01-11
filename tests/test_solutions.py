@@ -12,6 +12,7 @@ from day12 import day12_1, day12_2
 from day13 import day13_1, day13_2
 from day14 import day14_1, day14_2
 from day15 import day15
+from day16 import day16_1, parse_rule, parse_ticket, create_ticket_validator, determine_order_fields
 
 
 def test_day2():
@@ -72,7 +73,7 @@ def test_day7():
     print(f"The filename: {filename}")
     file = open(filename, "r+")
     example = file.read().splitlines()
-    assert day7_1(rules=example, x=["shiny gold"]) == 4
+    assert day7_1(rules=example, target="shiny gold") == 4
     assert day7_2(rules=example) == 32
 
 
@@ -96,7 +97,7 @@ def test_day9():
     print(f"The filename: {filename}")
     file = open(filename, "r+")
     example = file.read().splitlines()
-    assert day9_1(data=example, length=5) == 127
+    assert day9_1(data=example, p=5) == 127
     assert day9_2(data=example, target=127) == 62
 
 
@@ -166,3 +167,33 @@ def test_day15():
     assert day15(data="3,2,1".split(",")) == 438
     assert day15(data="3,1,2".split(",")) == 1836
     # assert day15(data="0,3,6".split(","), threshold=30000000) == 175594
+
+
+def test_day16():
+    example1 = "class: 1-3 or 5-7\n" \
+               "row: 6-11 or 33-44\n" \
+               "seat: 13-40 or 45-50\n\n" \
+               "your ticket:\n" \
+               "7,1,14\n\n" \
+               "nearby tickets:\n" \
+               "7,3,47\n" \
+               "40,4,50\n" \
+               "55,2,20\n" \
+               "38,6,12".split("\n\n")
+    example2 = "class: 0-1 or 4-19\n" \
+               "row: 0-5 or 8-19\n" \
+               "seat: 0-13 or 16-19\n\n" \
+               "your ticket:\n" \
+               "11,12,13\n\n" \
+               "nearby tickets:\n" \
+               "3,9,18\n" \
+               "15,1,5\n" \
+               "5,14,9".split("\n\n")
+    assert day16_1(data=example1)[0] == 71
+    assert parse_rule('class: 1-3 or 5-7') == ('class', 1, 3, 5, 7)
+    assert parse_ticket('3,9,18') == (3, 9, 18)
+
+    rules = [parse_rule(r) for r in example2[0].splitlines()]
+    validator = create_ticket_validator(rules)
+    tickets = [parse_ticket(t) for t in example2[2].splitlines()[1:]]
+    assert determine_order_fields(tickets=tickets, validator=validator) == {0: 'row', 1: 'class', 2: 'seat'}

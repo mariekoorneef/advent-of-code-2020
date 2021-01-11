@@ -46,11 +46,12 @@ def calculate_nr_paths_tree(list_length):
 
 
 def day10_1(data):
+    """Arrange the joltages in order; count the number of each size difference;
+        return the product of 1- and 3-jolt differences."""
     numbers = sorted([int(i) for i in data])
-    device_joltage = max(numbers) + 3
-    joltages = [0] + numbers + [device_joltage]
-    result = [y - x for x, y in zip(joltages[:-1], joltages[1:])]
-    jolt_count = dict(Counter(result).items())
+    jolts = [0] + numbers + [max(numbers) + 3]
+    diffs = [y - x for x, y in zip(jolts[:-1], jolts[1:])]
+    jolt_count = dict(Counter(diffs).items())
 
     print("Part One:")
     for jolt in jolt_count.keys():
@@ -62,11 +63,11 @@ def day10_1(data):
 
 
 def day10_2(data):
+    """Total number of arrangements the adapters to connect the charging outlet to your device?"""
     numbers = sorted([int(i) for i in data])
-    device_joltage = max(numbers) + 3
-    joltages = [0] + numbers + [device_joltage]
-    result = [y - x for x, y in zip(joltages[:-1], joltages[1:])]
-    indices = [0] + [i + 1 for i, x in enumerate(result) if x == 3]
+    jolts = [0] + numbers + [max(numbers) + 3]
+    diffs = [y - x for x, y in zip(jolts[:-1], jolts[1:])]
+    indices = [0] + [i + 1 for i, x in enumerate(diffs) if x == 3]
 
     print("Part Two: When a 3-jolt difference occurs, we split the list in two lists.")
 
@@ -76,18 +77,18 @@ def day10_2(data):
         mapping[i] = calculate_nr_paths_tree(list_length=i)
 
     arrangements = []
-    len_sublist = []
+    len_subseq = []
 
     for i, index in enumerate(indices[:-1]):
-        sublist = joltages[index:indices[i + 1]]
-        j = len(sublist)
-        len_sublist.append(j)
+        subseq = jolts[index:indices[i + 1]]
+        j = len(subseq)
+        len_subseq.append(j)
         arrangements.append(mapping[j])
 
     nr_distinct_arrangements = np.prod(arrangements)
 
     print(f"The unique lengths of the contiguous sets are:"
-          f" {sorted(list(set(len_sublist)))}")
+          f" {sorted(list(set(len_subseq)))}")
     print(f"\t A contiguous set with length 5, e.g. {list(range(0, 5))}, "
           f"has {mapping[5]} distinct arrangements.")
     # print(len_sublist)
