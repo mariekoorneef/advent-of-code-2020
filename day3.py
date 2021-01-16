@@ -1,8 +1,9 @@
 """ Advent of Code day 3 """
 
-import numpy as np
 from aocd import get_data
 from dotenv import load_dotenv
+
+from helper import prod
 
 
 def day3_1(area, right, down):
@@ -29,7 +30,7 @@ def day3_2(area):
         count = day3_1(area=area, right=r, down=d)
         trees.append(count)
     print(f"Number of trees on each of the slopes: {trees}")
-    return np.prod(trees)
+    return prod(trees)
 
 
 if __name__ == "__main__":

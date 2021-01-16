@@ -163,7 +163,7 @@ def test_day15():
     assert day15(text="2,3,1") == 78
     assert day15(text="3,2,1") == 438
     assert day15(text="3,1,2") == 1836
-    # assert day15(data="0,3,6", threshold=30000000) == 175594
+    # assert day15(text="0,3,6", threshold=30000000) == 175594
 
 
 def test_day16():

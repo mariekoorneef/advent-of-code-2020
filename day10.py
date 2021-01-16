@@ -1,13 +1,12 @@
 """ Advent of Code day 10 """
 
 from collections import Counter
-import numpy as np
 from aocd import get_data
 from dotenv import load_dotenv
-from collections.abc import Iterable
+from typing import Iterable
 
 
-from helper import data
+from helper import data, prod
 
 
 def create_children(input_list: list, parents: list) -> dict:
@@ -88,7 +87,7 @@ def day10_2(text):
         len_subseq.append(j)
         arrangements.append(mapping[j])
 
-    nr_distinct_arrangements = np.prod(arrangements)
+    nr_distinct_arrangements = prod(arrangements)
 
     print(f"The unique lengths of the contiguous sets are:"
           f" {sorted(list(set(len_subseq)))}")

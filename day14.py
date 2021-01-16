@@ -31,7 +31,7 @@ def day14_1(text):
             result = [j if i == "X" else i for i, j in zip(mask, bit36(val))]
             results[f"mem[{addr}]"] = int("".join(result), 2)
 
-    print(f"Part 1: Sum of all values left in memory after completion: {sum(results.values())}")
+    print(f"Part One: Sum of all values left in memory after completion: {sum(results.values())}")
 
     return sum(results.values())
 
@@ -72,7 +72,7 @@ def day14_2(text):
             print(f"mem[{i}]: {val}")
             results[f"mem[{i}]"] = val
 
-    print(f"Part 2: Sum of all values left in memory after completion: {sum(results.values())}")
+    print(f"Part Two: Sum of all values left in memory after completion: {sum(results.values())}")
 
     return sum(results.values())
 

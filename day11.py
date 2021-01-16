@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from aocd.models import Puzzle
 import numpy as np
 from itertools import product
-from collections.abc import Iterable
+from typing import Iterable
 
 from helper import lines
 
@@ -148,6 +148,6 @@ if __name__ == "__main__":
     puzzle = Puzzle(year=2020, day=11)
     input_data = puzzle.input_data
 
-    print(f"Part 1: {day11_1(text=input_data)} seats end up occupied")
+    print(f"Part One: {day11_1(text=input_data)} seats end up occupied")
 
-    print(f"Part 2: {day11_2(text=input_data)} seats end up occupied")
+    print(f"Part Two: {day11_2(text=input_data)} seats end up occupied")

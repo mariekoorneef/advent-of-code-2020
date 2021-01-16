@@ -26,7 +26,7 @@ def day13_1(text):
     ind = x2.index(departure_timestamp)
     bus_id = bus_ids[ind]
     multiplication = bus_id * waiting_time
-    print(f"Part 1: Bus ID of earliest bus: {bus_id}\n"
+    print(f"Part One: Bus ID of earliest bus: {bus_id}\n"
           f"Waiting time in minutes: {waiting_time}\n"
           f"Multiplication: {multiplication}")
 
@@ -50,7 +50,7 @@ def day13_2(text):
             # print(t)
 
         if index == len(buses) - 2:
-            print(f"Part 2: the earliest timestamp is: {t}")
+            print(f"Part Two: the earliest timestamp is: {t}")
             break
         else:
             # uses the observation that bus ids are prime numbers

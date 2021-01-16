@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from aocd.models import Puzzle
 
 
-from helper import data
+from helper import data, prod
 
 
 def parse_rule(text: str) -> tuple:
@@ -102,10 +102,7 @@ def day16_2(text):
     # Index of the six fields that start with the word departure.
     departure_ind = [k for k, v in order.items() if v.startswith('departure')]
 
-    answer = 1
-    your_ticket = info.your_ticket
-    for ind in departure_ind:
-        answer *= your_ticket[ind]
+    answer = prod([info.your_ticket[ind] for ind in departure_ind])
 
     print(f"Part Two: Multiply the six values of the fields that start with 'departure': {answer}")
 
