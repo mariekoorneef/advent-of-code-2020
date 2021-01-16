@@ -7,6 +7,9 @@ from dotenv import load_dotenv
 from collections.abc import Iterable
 
 
+from helper import data
+
+
 def create_children(input_list: list, parents: list) -> dict:
     """Create a parent child dictionary tree,
      e.g. input_list [0, 1, 2] returns {0: {1: {2: {}}, 2: {}}}"""
@@ -45,10 +48,10 @@ def calculate_nr_paths_tree(list_length):
     return nr_paths
 
 
-def day10_1(data):
+def day10_1(text):
     """Arrange the joltages in order; count the number of each size difference;
         return the product of 1- and 3-jolt differences."""
-    numbers = sorted([int(i) for i in data])
+    numbers = sorted(data(text=text, parser=int, sep="\n"))
     jolts = [0] + numbers + [max(numbers) + 3]
     diffs = [y - x for x, y in zip(jolts[:-1], jolts[1:])]
     jolt_count = dict(Counter(diffs).items())
@@ -62,9 +65,9 @@ def day10_1(data):
     return jolt_count[1], jolt_count[3]
 
 
-def day10_2(data):
+def day10_2(text):
     """Total number of arrangements the adapters to connect the charging outlet to your device?"""
-    numbers = sorted([int(i) for i in data])
+    numbers = sorted(data(text=text, parser=int, sep="\n"))
     jolts = [0] + numbers + [max(numbers) + 3]
     diffs = [y - x for x, y in zip(jolts[:-1], jolts[1:])]
     indices = [0] + [i + 1 for i, x in enumerate(diffs) if x == 3]
@@ -103,10 +106,8 @@ def day10_2(data):
 if __name__ == "__main__":
     load_dotenv()
 
-    lines = get_data(day=10, year=2020).splitlines()
-
     # --- Part One ---
-    day10_1(data=lines)
+    day10_1(text=get_data(day=10, year=2020))
 
     # --- Part Two ---
-    day10_2(data=lines)
+    day10_2(text=get_data(day=10, year=2020))

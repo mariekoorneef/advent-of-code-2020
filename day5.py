@@ -3,6 +3,8 @@
 from aocd import get_data
 from dotenv import load_dotenv
 
+from helper import data
+
 
 def binary_space_partitioning(l: list, seat: str, lower_half_identifier: str, upper_half_identifier: str) -> int:
     """Given the first seven characters of FBFBBFFRLR and 128 rows return 44"""
@@ -41,15 +43,15 @@ def decode_seat(seat: str) -> int:
     return seat_id
 
 
-def day5_1(seats):
+def day5_1(text):
     """Find the maximum seat id. """
-    seat_ids = [decode_seat(seat=s) for s in seats]
+    seat_ids = data(text=text, parser=decode_seat, sep="\n")
     return max(seat_ids)
 
 
-def day5_2(seats):
+def day5_2(text):
     """Find the missing seat id"""
-    seat_ids = [decode_seat(seat=s) for s in seats]
+    seat_ids = data(text=text, parser=decode_seat, sep="\n")
     return missing_elements(l=sorted(seat_ids))[0]
 
 
@@ -57,8 +59,8 @@ if __name__ == '__main__':
     load_dotenv()
 
     # -- Part One ---
-    seat_codes = get_data(day=5, year=2020).splitlines()
+    input_data = get_data(day=5, year=2020)
 
-    print(f"Part One: The highest seat ID on a boarding pass: {day5_1(seats=seat_codes)}")
+    print(f"Part One: The highest seat ID on a boarding pass: {day5_1(text=input_data)}")
 
-    print(f"Part Two: The ID of my seat: {day5_2(seats=seat_codes)}")
+    print(f"Part Two: The ID of my seat: {day5_2(text=input_data)}")

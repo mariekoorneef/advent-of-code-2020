@@ -1,7 +1,11 @@
 import re
 from typing import Tuple, List, Dict
+from itertools import chain
 from dotenv import load_dotenv
 from aocd.models import Puzzle
+
+
+from helper import data
 
 
 def parse_rule(text: str) -> tuple:
@@ -16,6 +20,12 @@ def parse_ticket(text: str) -> Tuple[int, ...]:
     return tuple(map(int, text.split(",")))
 
 
+def create_set_values(l: list) -> set:
+    """Create a set of possible values for fields"""
+    setlist = [set(chain(range(i[1], i[2]+1), range(i[3], i[4]+1))) for i in l]
+    return set.union(*setlist)
+
+
 def create_ticket_validator(l: list) -> dict:
     """Create ticket validator according to the rules l given"""
     def create_lambda(i):
@@ -24,32 +34,41 @@ def create_ticket_validator(l: list) -> dict:
     return {rule[0]: create_lambda(rule) for rule in l}
 
 
-def day16_1(data):
+class Information:
+    def __init__(self, text):
+        self.input_data = text
+        self.rules = None
+        self.your_ticket = None
+        self.nearby_tickets = None
+
+    def parse_information(self):
+        rules, your_ticket, nearby_tickets = self.input_data.split("\n\n")
+        self.rules = data(text=rules, parser=parse_rule, sep="\n")
+        self.nearby_tickets = data(text=nearby_tickets.replace("nearby tickets:\n", ""), parser=parse_ticket, sep="\n")
+        self.your_ticket = parse_ticket(your_ticket.splitlines()[1])
+
+
+def day16_1(text):
     """Consider the validity of the nearby tickets. """
-    rules = [parse_rule(r) for r in data[0].splitlines()]
+    info = Information(text=text)
+    info.parse_information()
 
-    field_validator = create_ticket_validator(rules)
+    value_validator = create_set_values(l=info.rules)
 
-    nearby_tickets = [parse_ticket(t) for t in data[2].splitlines()[1:]]
     # values that are not valid for any field
     invalid = []
-    invalid_tickets = []
-    for ticket in nearby_tickets:
-        for t in ticket:
-            valid = [bool(field_validator[k](t)) for k in field_validator.keys()]
-            if sum(valid) == 0:
-                invalid.append(t)
-                # for part 2
-                invalid_tickets.append(ticket)
+    for ticket in info.nearby_tickets:
+        invalid.append(sum([t for t in ticket if t not in value_validator]))
 
     print(f"Part One: Consider the validity of the nearby tickets you scanned. "
           f"The ticket scanning error rate is {sum(invalid)}")
 
-    return sum(invalid), invalid_tickets
+    return sum(invalid)
 
 
 def determine_order_fields(tickets: List[tuple], validator: dict) -> Dict[int, str]:
-    """Using the valid ranges for each ticket field, determine what order the fields appear on the tickets. """
+    """Using the valid ranges for each ticket field, determine what order the fields appear on the tickets.
+    Return a mapping of {field_number: field_name} (index into ticket)"""
     order = {i: list(validator.keys()) for i in range(0, len(validator))}
 
     for ticket in tickets:
@@ -58,24 +77,25 @@ def determine_order_fields(tickets: List[tuple], validator: dict) -> Dict[int, s
                 if not validator[key](val):
                     order[i].remove(key)
 
-    while not all(len(v) == 1 for k, v in order.items()):
+    while any(len(order[i]) > 1 for i in order):
         subdict = {key: value[0] for key, value in order.items() if len(value) == 1}
         subset = set(subdict.values())
-        for k1 in set(order) - set(subdict):
-            order[k1] = list(set(order[k1]) - subset)
+        for k in set(order) - set(subdict):
+            order[k] = list(set(order[k]) - subset)
 
     return {k: v[0] for k, v in order.items()}
 
 
-def day16_2(data, invalid_tickets):
+def day16_2(text):
     """Consider valid nearby tickets. Multiply the six values of the fields that start with 'departure'"""
-    rules = [parse_rule(r) for r in data[0].splitlines()]
+    info = Information(text=text)
+    info.parse_information()
 
-    field_validator = create_ticket_validator(rules)
+    field_validator = create_ticket_validator(info.rules)
 
-    nearby_tickets = [parse_ticket(t) for t in data[2].splitlines()[1:]]
-    # discard invalid tickets
-    nearby_tickets = [t for t in nearby_tickets if t not in invalid_tickets]
+    # keep valid tickets according to day16_1
+    value_validator = create_set_values(l=info.rules)
+    nearby_tickets = [ticket for ticket in info.nearby_tickets if all(t in value_validator for t in ticket)]
 
     order = determine_order_fields(tickets=nearby_tickets, validator=field_validator)
 
@@ -83,7 +103,7 @@ def day16_2(data, invalid_tickets):
     departure_ind = [k for k, v in order.items() if v.startswith('departure')]
 
     answer = 1
-    your_ticket = parse_ticket(data[1].splitlines()[1])
+    your_ticket = info.your_ticket
     for ind in departure_ind:
         answer *= your_ticket[ind]
 
@@ -94,6 +114,6 @@ if __name__ == "__main__":
     load_dotenv()
 
     puzzle = Puzzle(year=2020, day=16)
-    input_data = puzzle.input_data.split("\n\n")
-    error_rate, invalid = day16_1(data=input_data)
-    day16_2(data=input_data, invalid_tickets=invalid)
+    input_data = puzzle.input_data
+    day16_1(text=input_data)
+    day16_2(text=input_data)

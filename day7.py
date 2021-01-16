@@ -4,6 +4,8 @@ import re
 from aocd import get_data
 from dotenv import load_dotenv
 
+from helper import data, lines
+
 
 def create_children(nodes: dict, l: list) -> list:
     """Create a tree structure from a set of parent-child relationships in nodes"""
@@ -12,7 +14,7 @@ def create_children(nodes: dict, l: list) -> list:
         for i in l:
             count, color = i
             children = nodes[color]
-            d.append({"id": color, "count": int(count), "children": create_children(nodes=nodes, l=children)})
+            d.append({"id": color, "count": count, "children": create_children(nodes=nodes, l=children)})
         return d
 
 
@@ -29,13 +31,14 @@ def parse_rule(rule: str) -> tuple:
     (light red, [('1', 'bright white'), ('2', 'muted yellow')])"""
     key = rule[:rule.find(" bags contain")]
     colors = re.findall(r'\d+ (.*?) bag', rule)
-    quantity = re.findall(r'\d+', rule)
+    quantity = map(int, re.findall(r'\d+', rule))
     value = list(zip(quantity, colors))
     return key, value
 
 
-def day7_1(rules, target='shiny gold'):
+def day7_1(text, target='shiny gold'):
     """How many colors of bags can contain the target color bag? """
+    rules = lines(text)
     colors = []
     x = [target]
     while x:
@@ -49,17 +52,10 @@ def day7_1(rules, target='shiny gold'):
     return len(set(colors))
 
 
-def day7_2(rules, target='shiny gold'):
+def day7_2(text, target='shiny gold'):
     """How many individual bags are inside the target bag?"""
     # Create a dictionary with parent child relationships
-    nodes = {}
-    for r in rules:
-        parent, children = parse_rule(rule=r)
-        # print(f"{parent}: {list(zip(d, children))}")
-        if parent in nodes.keys():
-            print(f"{parent} already in dictionary")
-        nodes[parent] = children
-    # print(nodes)
+    nodes = dict(data(text=text, parser=parse_rule, sep="\n"))
 
     # Create a tree structure from a set of parent-child relationships starting at 'shiny gold'
     tree = {"id": target,
@@ -75,11 +71,11 @@ def day7_2(rules, target='shiny gold'):
 if __name__ == "__main__":
     load_dotenv()
 
-    lines = get_data(day=7, year=2020).splitlines()
+    input_data = get_data(day=7, year=2020)
 
     # --- Part One ---
-    print(f"Part One: {day7_1(rules=lines, target='shiny gold')} bag colors can eventually contain "
+    print(f"Part One: {day7_1(text=input_data, target='shiny gold')} bag colors can eventually contain "
           f"at least one shiny gold bag")
 
     # --- Part Two ---
-    print(f"Part Two: {day7_2(rules=lines)} individual bags are required inside my single shiny gold bag")
+    print(f"Part Two: {day7_2(text=input_data)} individual bags are required inside my single shiny gold bag")

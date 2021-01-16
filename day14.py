@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from aocd.models import Puzzle
 import itertools
 import re
+from helper import data
 
 
 def bit36(i: int) -> str:
@@ -18,8 +19,9 @@ def parse_docking(line: str) -> tuple:
         return tuple(map(int, re.findall(r'\d+', line)))
 
 
-def day14_1(data):
-    programs = [parse_docking(i) for i in data]
+def day14_1(text):
+    programs = data(text=text, parser=parse_docking, sep="\n")
+    print(programs)
     results = {}
     for program in programs:
         addr, val = program
@@ -34,8 +36,8 @@ def day14_1(data):
     return sum(results.values())
 
 
-def day14_2(data):
-    programs = [parse_docking(i) for i in data]
+def day14_2(text):
+    programs = data(text=text, parser=parse_docking, sep="\n")
     print(programs)
     results = {}
     for program in programs:
@@ -79,6 +81,5 @@ if __name__ == "__main__":
     load_dotenv()
 
     puzzle = Puzzle(year=2020, day=14)
-    input_data = puzzle.input_data.splitlines()
-    day14_1(data=input_data)
-    day14_2(data=input_data)
+    day14_1(text=puzzle.input_data)
+    day14_2(text=puzzle.input_data)

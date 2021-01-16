@@ -11,11 +11,11 @@ def is_prime(n: int) -> bool:
     return n > 1 and all(n % i for i in islice(count(2), int(sqrt(n)-1)))
 
 
-def day13_1(data):
+def day13_1(text):
     """Find the earliest bus multiplied by the waiting time"""
-    earliest_timestamp = int(data[0])
+    earliest_timestamp = int(text[0])
 
-    bus_ids = [int(i) for i in data[1].split(",") if i != "x"]
+    bus_ids = [int(i) for i in text[1].split(",") if i != "x"]
 
     x1 = [earliest_timestamp // i for i in bus_ids]
     x2 = [(i+1)*j for i, j in zip(x1, bus_ids)]
@@ -33,9 +33,9 @@ def day13_1(data):
     return multiplication
 
 
-def day13_2(data):
+def day13_2(text):
     """Find the time where all the buses arrive at the right offsets. """
-    buses = [(int(i), ind) for ind, i in enumerate(data.split(",")) if i != "x"]
+    buses = [(int(i), ind) for ind, i in enumerate(text.split(",")) if i != "x"]
 
     buses.sort(key=lambda tup: tup[0], reverse=True)
 
@@ -66,10 +66,10 @@ if __name__ == "__main__":
     puzzle = Puzzle(year=2020, day=13)
     input_data = puzzle.input_data.splitlines()
 
-    day13_1(data=input_data)
+    day13_1(text=input_data)
 
     # note bus_ids are prime
     for nr in [int(i) for i in input_data[1].split(",") if i != "x"]:
         print(f"Bus ID {nr} is prime: {is_prime(n=nr)}")
 
-    day13_2(data=input_data[1])
+    day13_2(text=input_data[1])

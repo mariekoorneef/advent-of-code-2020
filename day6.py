@@ -23,8 +23,8 @@ def day6_2(answers):
 if __name__ == "__main__":
     load_dotenv()
 
-    data = get_data(day=6, year=2020).split("\n\n")
+    input_data = get_data(day=6, year=2020).split("\n\n")
 
-    print(f"Part One: For each group, the number of questions to which anyone answered 'yes': {day6_1(answers=data)}")
+    print(f"Part One: For each group, the number of questions to which anyone answered 'yes': {day6_1(answers=input_data)}")
 
-    print(f"Part Two: For each group, the number of questions to which everyone answered 'yes': {day6_2(answers=data)}")
+    print(f"Part Two: For each group, the number of questions to which everyone answered 'yes': {day6_2(answers=input_data)}")

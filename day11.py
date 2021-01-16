@@ -6,6 +6,8 @@ import numpy as np
 from itertools import product
 from collections.abc import Iterable
 
+from helper import lines
+
 
 def get_neighbours(cell: tuple, size: tuple) -> Iterable:
     """ Get cell index for neighbors in 2d-list: where neighbors are the eight immediately adjacent seats"""
@@ -98,9 +100,9 @@ def occupation_of_seats(layout: np.unicode_, d: dict, threshold: int):
     return occupation_of_seats(layout=c, d=d, threshold=threshold)
 
 
-def day11_1(data):
+def day11_1(text):
     # create a numpy array
-    picture = np.array([list(line) for line in data])
+    picture = np.array([list(line) for line in lines(text)])
     # get indices from the seat locations
     seat_locations = list(zip(*np.where(picture == "L")))
 
@@ -118,9 +120,9 @@ def day11_1(data):
     return nr_occupied_seats
 
 
-def day11_2(data):
+def day11_2(text):
     # create a numpy array
-    picture = np.array([list(line) for line in data])
+    picture = np.array([list(line) for line in lines(text)])
     rows, columns = picture.shape
     # get indices from the seat locations
     seat_locations = list(zip(*np.where(picture == "L")))
@@ -144,8 +146,8 @@ if __name__ == "__main__":
     load_dotenv()
 
     puzzle = Puzzle(year=2020, day=11)
-    input_data = puzzle.input_data.splitlines()
+    input_data = puzzle.input_data
 
-    print(f"Part 1: {day11_1(data=input_data)} seats end up occupied")
+    print(f"Part 1: {day11_1(text=input_data)} seats end up occupied")
 
-    print(f"Part 2: {day11_2(data=input_data)} seats end up occupied")
+    print(f"Part 2: {day11_2(text=input_data)} seats end up occupied")

@@ -3,8 +3,12 @@
 from dotenv import load_dotenv
 from aocd.models import Puzzle
 
+from helper import lines
 
-def day12_1(data):
+
+def day12_1(text):
+    instructions = lines(text=text)
+
     ship_location = {
         "N": 0,
         "S": 0,
@@ -16,7 +20,7 @@ def day12_1(data):
     degree = 90
     compass = {0: "N", 90: "E", 180: "S", 270: "W"}
 
-    for instruction in data:
+    for instruction in instructions:
         action = instruction[:1]
         value = int(instruction[1:])
         print(f"Action: {action} with value {value}")
@@ -47,7 +51,9 @@ def day12_1(data):
     return manhattan_dist
 
 
-def day12_2(data):
+def day12_2(text):
+    instructions = lines(text=text)
+
     ship_location = {
         "N": 0,
         "S": 0,
@@ -63,7 +69,7 @@ def day12_2(data):
     compass = {0: "N", 90: "E", 180: "S", 270: "W"}
     compass_reverse = {"N": 0, "E": 90, "S": 180, "W": 270}
 
-    for instruction in data:
+    for instruction in instructions:
         action = instruction[:1]
         value = int(instruction[1:])
         print(f"Action: {action} with value {value}")
@@ -122,12 +128,12 @@ if __name__ == "__main__":
     load_dotenv()
 
     puzzle = Puzzle(year=2020, day=12)
-    input_data = puzzle.input_data.splitlines()
+    input_data = puzzle.input_data
 
     # --- Part One ---
-    manhattan_distance = day12_1(data=input_data)
+    manhattan_distance = day12_1(text=input_data)
     print(f"Part One: Manhattan distance: {manhattan_distance}")
 
     # --- Part Two ---
-    manhattan_distance = day12_2(data=input_data)
+    manhattan_distance = day12_2(text=input_data)
     print(f"Part Two: Manhattan distance: {manhattan_distance}")

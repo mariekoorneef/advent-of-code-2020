@@ -3,6 +3,8 @@
 from aocd import get_data
 from dotenv import load_dotenv
 
+from helper import data
+
 
 def parse_instruction(instruction: str) -> tuple:
     """Given 'acc +1' return (acc, 1)"""
@@ -51,11 +53,11 @@ def part_2(l: list, v: list, i: int = 0, acc: int = 0) -> tuple:
         return acc, False
 
 
-def day8_1(data):
+def day8_1(text):
     """Execute the program until it loops; then return accum. """
-    instructions = [parse_instruction(i) for i in data]
+    instructions = data(text=text, parser=parse_instruction, sep="\n")
 
-    visit = [0]*len(data)
+    visit = [0]*len(instructions)
     i = accumulator = 0
 
     while visit[i] == 0:
@@ -65,10 +67,10 @@ def day8_1(data):
     return accumulator
 
 
-def day8_2(data):
+def day8_2(text):
     """By changing exactly one jmp or nop, the code terminates correctly."""
-    visit = [0] * len(data)
-    instructions = [parse_instruction(i) for i in data]
+    instructions = data(text=text, parser=parse_instruction, sep="\n")
+    visit = [0] * len(instructions)
     i = accumulator = 0
 
     # Run the program until it loops or terminates; return (terminates, accum)
@@ -90,10 +92,8 @@ def day8_2(data):
 if __name__ == "__main__":
     load_dotenv()
 
-    input_data = get_data(day=8, year=2020).splitlines()
-
     # --- Part One ---
-    print(f"Part One: Immediately before any instruction is executed a second time, the value in the accumulator is {day8_1(data=input_data)}.")
+    print(f"Part One: Immediately before any instruction is executed a second time, the value in the accumulator is {day8_1(text=get_data(day=8, year=2020))}.")
 
     # --- Part Two ---
-    print(f"Part Two: The value of the accumulator after the program terminates: {day8_2(data=input_data)}")
+    print(f"Part Two: The value of the accumulator after the program terminates: {day8_2(text=get_data(day=8, year=2020))}")

@@ -3,6 +3,8 @@
 from aocd import get_data
 from dotenv import load_dotenv
 
+from helper import data
+
 
 def find_two_numbers(numbers: list, target_number: int):
     """ Find two numbers from a list that add up to a specific number """
@@ -16,10 +18,10 @@ def find_two_numbers(numbers: list, target_number: int):
     return None
 
 
-def day9_1(data: list, p: int = 25) -> int:
+def day9_1(text: str, p: int = 25) -> int:
     """Find the first number in the list of numbers (after a preamble of p=25 numbers)
         which is not the sum of two of the p numbers before it."""
-    numbers = [int(i) for i in data]
+    numbers = data(text=text, parser=int, sep="\n")
     for i in range(0, len(numbers)-p):
         sublist = numbers[i:i+p]
         target = numbers[i+p]
@@ -28,9 +30,9 @@ def day9_1(data: list, p: int = 25) -> int:
             return target
 
 
-def day9_2(data: list, target: int) -> int:
+def day9_2(text: str, target: int) -> int:
     """ Find a contiguous subsequence of nums that sums to target; add their max and min. """
-    numbers = [int(i) for i in data]
+    numbers = data(text=text, parser=int, sep="\n")
     subseq = []
     for i, number in enumerate(numbers):
         subseq.append(number)
@@ -45,15 +47,13 @@ def day9_2(data: list, target: int) -> int:
 if __name__ == "__main__":
     load_dotenv()
 
-    lines = get_data(day=9, year=2020).splitlines()
-
     # --- Part One ---
-    invalid_number = day9_1(data=lines, p=25)
+    invalid_number = day9_1(text=get_data(day=9, year=2020), p=25)
 
     # --- Part Two ---
     # print(f"Target value: {invalid_number}")
 
-    encryption_weakness = day9_2(data=lines, target=invalid_number)
+    encryption_weakness = day9_2(text=get_data(day=9, year=2020), target=invalid_number)
     print(f"Part Two: The encryption weakness in my XMAS-encrypted list of numbers: {encryption_weakness}")
 
 

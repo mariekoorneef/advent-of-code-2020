@@ -4,6 +4,8 @@ import re
 from aocd import get_data
 from dotenv import load_dotenv
 
+from helper import data
+
 
 def parse_passport(text: str) -> dict:
     """Given a sequence of key:value pairs return a dictionary """
@@ -52,19 +54,21 @@ def check_passport_contains_fields(passport: dict, required_fields: set) -> bool
     return required_fields.issubset(passport)
 
 
-def day4_1(passports, required_fields=None):
+def day4_1(text, required_fields=None):
     """Count the number of passports that have all required_fields. """
     if required_fields is None:
         required_fields = {"byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"}
+    passports = data(text=text, parser=parse_passport, sep="\n\n")
     valid = [check_passport_contains_fields(passport, required_fields) for passport in passports]
     return sum(valid)
 
 
-def day4_2(passports, required_fields=None):
+def day4_2(text, required_fields=None):
     """Count the number of passports that have all required fields and valid values. """
     if required_fields is None:
         required_fields = {"byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"}
     valid = []
+    passports = data(text=text, parser=parse_passport, sep="\n\n")
     for passport in passports:
         if check_passport_contains_fields(passport, required_fields):
             valid.append(check_passport_field_values(passport))
@@ -79,12 +83,10 @@ if __name__ == "__main__":
     # --- Part One ---
     optional = {"cid"}
 
-    input_text = get_data(day=4, year=2020).split("\n\n")
+    input_data = get_data(day=4, year=2020)
 
-    pps = [parse_passport(text=t) for t in input_text]
-
-    print(f"Part One: {day4_1(passports=pps)} passports are valid")
+    print(f"Part One: {day4_1(text=input_data)} passports are valid")
 
     # --- Part Two ---
-    print(f"Part Two: {day4_2(passports=pps)} passports are valid")
+    print(f"Part Two: {day4_2(text=input_data)} passports are valid")
 
