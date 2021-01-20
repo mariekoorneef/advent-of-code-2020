@@ -1,12 +1,9 @@
 # advent-of-code-2020
 
-** WORK IN PROGRESS **
+My sample solutions for [Advent of Code 2020](https://adventofcode.com/2020), up to day 20 - part 1.
 
-See [Advent of Code 2020](https://adventofcode.com/2020) for the problem descriptions.
-
-### Run
-- [`advent-of-code-data`](https://pypi.org/project/advent-of-code-data/) python package
-- Follow the instructions to find `AOC_SESSION` variable
+### Run locally
+To get my puzzle input I have used Python package [`advent-of-code-data`](https://pypi.org/project/advent-of-code-data/). It requires your `AOC_SESSION`, see instructions.
 
 ```sh
 # create a virtualenv
@@ -26,7 +23,7 @@ python day18.py
 ```
 
 ### Tests
-Use `pytest` to test the examples given in the problem descriptions.
+I have used `pytest` to test the examples given in the problem descriptions.
 ```sh
 # in the virtualenv 
 pip install pytest
