@@ -1,7 +1,10 @@
+""" Advent of Code day 18 """
+
 import operator
 import pyparsing
 from dotenv import load_dotenv
 from aocd.models import Puzzle
+from typing import List
 
 ops = {"+": operator.add, "*": operator.mul}
 
@@ -15,17 +18,17 @@ def calculate(x: list, func, *args) -> int:
     return func(x)
 
 
-def left_to_right(expr: list) -> int:
+def left_to_right(expr: List[str]) -> int:
     """Operators are evaluated left-to-right """
     if len(expr) == 1:
-        return expr[0]
+        return int(expr[0])
     else:
         op1, op, op2, *rest = expr
         val = ops[op](int(op1), int(op2))
         return val if not rest else left_to_right([val, *rest])
 
 
-def addition_before_multiplication(expr: list) -> int:
+def addition_before_multiplication(expr: List[str]) -> int:
     """Addition is evaluated before multiplication. """
     if len(expr) == 1:
         return int(expr[0])

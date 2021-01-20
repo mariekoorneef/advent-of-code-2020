@@ -1,3 +1,5 @@
+""" Advent of Code day 17 """
+
 from helper import data
 import scipy.signal
 import numpy as np

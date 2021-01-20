@@ -1,11 +1,17 @@
+""" Advent of Code day 16 """
+
 import re
-from typing import Tuple, List, Dict
+from typing import Tuple, List, Dict, Set
+from collections import namedtuple
 from itertools import chain
 from dotenv import load_dotenv
 from aocd.models import Puzzle
 
 
 from helper import data, prod
+
+
+TicketInformation = namedtuple("TicketInformation", "rules, your_ticket, nearby_tickets")
 
 
 def parse_rule(text: str) -> tuple:
@@ -15,12 +21,12 @@ def parse_rule(text: str) -> tuple:
     return name, r11, r12, r21, r22
 
 
-def parse_ticket(text: str) -> Tuple[int, ...]:
+def parse_ticket(text: str) -> Tuple[int]:
     """Given '3,9,18' return (3, 9, 18)"""
     return tuple(map(int, text.split(",")))
 
 
-def create_set_values(l: list) -> set:
+def create_set_values(l: list) -> Set[int]:
     """Create a set of possible values for fields"""
     setlist = [set(chain(range(i[1], i[2]+1), range(i[3], i[4]+1))) for i in l]
     return set.union(*setlist)
@@ -34,30 +40,22 @@ def create_ticket_validator(l: list) -> dict:
     return {rule[0]: create_lambda(rule) for rule in l}
 
 
-class Information:
-    def __init__(self, text):
-        self.input_data = text
-        self.rules = None
-        self.your_ticket = None
-        self.nearby_tickets = None
-
-    def parse_information(self):
-        rules, your_ticket, nearby_tickets = self.input_data.split("\n\n")
-        self.rules = data(text=rules, parser=parse_rule, sep="\n")
-        self.nearby_tickets = data(text=nearby_tickets.replace("nearby tickets:\n", ""), parser=parse_ticket, sep="\n")
-        self.your_ticket = parse_ticket(your_ticket.splitlines()[1])
+def parse_ticket_information(rules: str, your_ticket, nearby_tickets) -> TicketInformation:
+    return TicketInformation(rules=data(text=rules, parser=parse_rule, sep="\n"),
+                             your_ticket=parse_ticket(your_ticket.splitlines()[1]),
+                             nearby_tickets=data(text=nearby_tickets.replace("nearby tickets:\n", ""), parser=parse_ticket, sep="\n")
+                             )
 
 
 def day16_1(text):
     """Consider the validity of the nearby tickets. """
-    info = Information(text=text)
-    info.parse_information()
+    ticket_information = parse_ticket_information(*text.split("\n\n"))
 
-    value_validator = create_set_values(l=info.rules)
+    value_validator = create_set_values(l=ticket_information.rules)
 
     # values that are not valid for any field
     invalid = []
-    for ticket in info.nearby_tickets:
+    for ticket in ticket_information.nearby_tickets:
         invalid.append(sum([t for t in ticket if t not in value_validator]))
 
     print(f"Part One: Consider the validity of the nearby tickets you scanned. "
@@ -88,21 +86,20 @@ def determine_order_fields(tickets: List[tuple], validator: dict) -> Dict[int, s
 
 def day16_2(text):
     """Consider valid nearby tickets. Multiply the six values of the fields that start with 'departure'"""
-    info = Information(text=text)
-    info.parse_information()
+    ticket_information = parse_ticket_information(*text.split("\n\n"))
 
-    field_validator = create_ticket_validator(info.rules)
+    field_validator = create_ticket_validator(ticket_information.rules)
 
     # keep valid tickets according to day16_1
-    value_validator = create_set_values(l=info.rules)
-    nearby_tickets = [ticket for ticket in info.nearby_tickets if all(t in value_validator for t in ticket)]
+    value_validator = create_set_values(l=ticket_information.rules)
+    nearby_tickets = [ticket for ticket in ticket_information.nearby_tickets if all(t in value_validator for t in ticket)]
 
     order = determine_order_fields(tickets=nearby_tickets, validator=field_validator)
 
     # Index of the six fields that start with the word departure.
     departure_ind = [k for k, v in order.items() if v.startswith('departure')]
 
-    answer = prod([info.your_ticket[ind] for ind in departure_ind])
+    answer = prod([ticket_information.your_ticket[ind] for ind in departure_ind])
 
     print(f"Part Two: Multiply the six values of the fields that start with 'departure': {answer}")
 
